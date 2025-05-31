@@ -50,7 +50,7 @@ export default function Login() {
 
   return (
     <div
-      className="w-screen min-h-screen flex items-center justify-center px-4"
+      className="w-screen flex justify-center px-4"
       style={{
         backgroundImage: `url(${fireBg})`,
         backgroundRepeat: "no-repeat",
@@ -59,10 +59,7 @@ export default function Login() {
       }}
     >
       <div className="bg-[#F6F6EF]/70 backdrop-blur-md shadow-2xl w-[600px] h-screen p-8 text-center">
-        {/* Logo (dacă vrei, ca la Register) */}
         <img src={logo} alt="Logo" className="w-[500px] h-auto mx-auto mb-8" />
-
-        {/* Tabs vizuale */}
         <div className="flex justify-center mb-6 text-sm font-medium space-x-6">
           <button className="text-black border-b-2 border-[#90D1CA] pb-1">
             Log In
