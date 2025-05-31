@@ -66,7 +66,7 @@ export default function Register() {
         backgroundImage: `url(${fireBg})`,
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
-        backgroundSize: "1900px auto", // lărgește dar menține proporții
+        backgroundSize: "1900px auto",
       }}
     >
       <div className="bg-[#F6F6EF]/70 backdrop-blur-md shadow-2xl w-[600px] h-screen p-8 text-center">
