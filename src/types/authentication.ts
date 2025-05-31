@@ -1,7 +1,7 @@
 export interface LoginCredentials {
-    credential: string,
+    email: string,
     password: string,
-    remember_me: boolean,
+    rememberMe?: boolean,
 }
 
 export interface RegisterCredentials {

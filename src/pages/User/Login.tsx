@@ -9,16 +9,16 @@ import { FaLock, FaRegUserCircle, FaUser } from "react-icons/fa"
 
 export default function Login() {
     const [formData, setFormData] = useState({
-        credential: "",
+        email: "",
         password: "",
-        remember_me: false
+        rememberMe: false
     } as LoginCredentials)
     const { token, setToken } = useAuth()
     const [isLoading, setIsLoading] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData((prevFormData: LoginCredentials) => {
-            if(e.target.name === "remember_me") {
+            if(e.target.name === "rememberMe") {
                 return { ...prevFormData, [e.target.name]: e.target.checked }
             }
             return { ...prevFormData, [e.target.name]: e.target.value }
@@ -29,10 +29,10 @@ export default function Login() {
         e.preventDefault()
         setIsLoading(true)
         try {
-            const response = await api.post('/login', formData)
+            const response = await api.post('/users/login', formData)
             if (response?.status === 200) {
                 const { data } = response
-                setToken(data.content)
+                setToken(data.data?.token)
                 toast.success("Logged in successfully!")
             }
         } catch(err) {
@@ -53,11 +53,11 @@ export default function Login() {
                 <FaRegUserCircle size={92} className="text-gray-500 my-8" />
                 <form onSubmit={handleSubmit} className="text-left">
                     <div className="bg-gray-100 w-full px-3 py-1 mb-2 flex rounded-md items-center text-lg">
-                        <label htmlFor="credential" className="pr-2 mr-2 border-r border-gray-500">
+                        <label htmlFor="email" className="pr-2 mr-2 border-r border-gray-500">
                             <FaUser size={20} className="text-gray-500" />
                         </label>
-                        <input type="text" id="credential" name="credential" required placeholder="E-mail / Username"
-                               value={formData.credential} onChange={handleChange}
+                        <input type="text" id="email" name="email" required placeholder="E-mail / Username"
+                               value={formData.email} onChange={handleChange}
                                className="px-2 py-1 focus:outline-0 bg-transparent flex-1"
                         />
                     </div>
@@ -70,8 +70,8 @@ export default function Login() {
                                className="px-2 py-1 focus:outline-0 bg-transparent flex-1"
                         />
                     </div>
-                    <label htmlFor="remember_me" className="cursor-pointer flex items-center mb-10">
-                        <input type="checkbox" id="remember_me" name="remember_me" checked={formData.remember_me} onChange={handleChange} className="accent-primary" />
+                    <label htmlFor="rememberMe" className="cursor-pointer flex items-center mb-10">
+                        <input type="checkbox" id="rememberMe" name="rememberMe" checked={formData.rememberMe} onChange={handleChange} className="accent-primary" />
                         <span className="ml-2">Remember Me?</span>
                     </label>
                     <div className="flex w-full gap-3">

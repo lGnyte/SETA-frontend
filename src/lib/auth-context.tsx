@@ -40,13 +40,13 @@ const AuthProvider = ({ children }) => {
             localStorage.setItem('token', token);
             (async () => {
                 try {
-                    const response = await api.get("/user_info", {
+                    const response = await api.get("/users/me", {
                         headers: {
                             "Authorization": "Bearer " + token
                         }
                     });
-                    if (response.status === 200 && response.data.status === "success") {
-                        const { id, email, username } = response.data.content;
+                    if (response.status === 200 && response.data.success) {
+                        const { id, email, username } = response.data.data;
                         setUser({
                             userId: id,
                             email,
