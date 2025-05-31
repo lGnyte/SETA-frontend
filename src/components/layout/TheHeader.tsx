@@ -14,7 +14,7 @@ export default function TheHeader(props: TheHeaderProps) {
     const { title, Icon, toggleSidebar } = props;
     // const { token, logout, username } = useAuth();
     return(
-        <header className="flex items-center h-16 px-3 sm:px-6 bg-white shadow-md border-y-2 rounded-t-xl md:rounded-tl-none">
+        <header className="flex items-center h-16 px-3 sm:px-6 bg-white shadow-md border-y-2 border-gray-200 rounded-t-xl md:rounded-tl-none">
             <button onClick={toggleSidebar} className="block md:hidden">
                 <TbMenu2 size={36} className="text-primary mr-5" />
             </button>
