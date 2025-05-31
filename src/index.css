@@ -1,1 +1,98 @@
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #ab4444;
+    --screen-xs: 375px;
+}
+
+.loader {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    border: 15px solid;
+    border-color: #ab4444 #ab4444 transparent;
+    box-sizing: border-box;
+    animation: rotation 1.5s linear infinite;
+}
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 15px solid;
+    border-color: transparent #000 #000;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    animation: rotationBack 0.75s linear infinite;
+    transform-origin: center center;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotationBack {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+.loader-inline {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    border: 10px solid;
+    border-color: rgba(171,68,68, 0.5) rgba(171,68,68, 0.65) rgba(171,68,68, 0.75) rgba(171,68,68, 0.85);
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.loader-inline.small {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    border: 5px solid;
+    border-color: rgba(171,68,68, 0.5) rgba(171,68,68, 0.65) rgba(171,68,68, 0.75) rgba(171,68,68, 0.85);
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#root {
+    display:flex;
+    color: #232323;
+    background-color: #e9e9e9;
+    font-family: "Figtree", sans-serif;
+}
+
+*,:before,:after {
+    box-sizing: border-box;
+    border-color: #e5e7eb
+}
