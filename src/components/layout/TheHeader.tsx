@@ -12,18 +12,14 @@ interface TheHeaderProps {
 }
 
 export default function TheHeader(props: TheHeaderProps) {
-    const { title, Icon, toggleSidebar } = props;
+    const { toggleSidebar } = props;
     const { token, logout, username } = useAuth();
     return(
-        <header className="flex items-center h-16 px-3 sm:px-6 bg-white shadow-md border-y-2 border-gray-200 rounded-t-xl md:rounded-tl-none">
+        <header className="flex items-center h-16 px-3 sm:px-6 bg-white shadow-md border-gray-200">
             <button onClick={toggleSidebar} className="block md:hidden">
-                <TbMenu2 size={36} className="text-primary mr-5" />
+                <TbMenu2 size={36} className="mr-5" />
             </button>
-            <Icon size={42} className="p-2 mr-4 border rounded-lg bg-primary text-primary bg-opacity-40 border-primary" />
-            <h1 className="mr-auto text-3xl font-bold">
-                {title}
-            </h1>
-            <nav className="text-lg font-semibold flex items-center gap-2 [&>a]:px-4 [&>a]:py-1 [&>a:hover]:bg-primary [&>a:hover]:text-white [&>a]:rounded-md [&>a]:duration-200 ">
+            <nav className="text-lg font-semibold ml-auto flex items-center gap-2 [&>a]:px-4 [&>a]:py-1 [&>a:hover]:bg-gray-100 [&>a:hover]:text-white [&>a]:rounded-md [&>a]:duration-200 ">
                 <div className="sm:flex hidden items-center gap-2 px-2 py-1 duration-200 rounded-md select-none">
                     <FaUserCircle size={24} />
                     <span className="flex">
@@ -31,7 +27,7 @@ export default function TheHeader(props: TheHeaderProps) {
                     </span>
                 </div>
                 {token ?
-                    <div onClick={logout} title="Logout" className="flex items-center w-8 gap-2 overflow-hidden duration-200 cursor-pointer hover:bg-primary hover:px-2 hover:py-1 rounded-md hover:text-white [&>span]:w-0 hover:[&>span]:w-auto hover:w-28">
+                    <div onClick={logout} title="Logout" className="flex items-center w-8 gap-2 overflow-hidden duration-200 cursor-pointer hover:bg-gray-100 hover:px-2 hover:py-1 rounded-md [&>span]:w-0 hover:[&>span]:w-auto hover:w-28 text-sm">
                         <IoMdLogOut size={24} />
                         <span>Logout</span>
                     </div>
