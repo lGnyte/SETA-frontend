@@ -1,145 +1,60 @@
-import { useState } from "react";
+import {useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import api from "../../lib/axios.ts";
+import toast from "react-hot-toast";
+import type {Chapter} from "../../types/chapter.ts";
 
-const currentUser = "Olivia";
-const isAdmin = true;
+export default function Chapter(){
+    const {chapterId} = useParams<{ chapterId: string }>();
+    const [chapter, setChapter] = useState<Chapter | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-interface Section {
-    author: string;
-    content: string;
-    saved: boolean;
-}
+    useEffect(() => {
+        (async () => {
+            setIsLoading(true);
+            setChapter(null);
 
-const initialChapter = {
-    title: "Capitolul 4: Răscrucea",
-    collaborators: ["Michael", "Olivia", "Noah"],
-    sections: [
-        { author: "Michael", content: "Textul lui Michael...", saved: true },
-        { author: "Noah", content: "Partea lui Noah...", saved: true },
-    ],
-};
+            try {
+                const response = await api.get(`/chapters/${chapterId}`);
 
-export default function EditChapterPage() {
-    const [title, setTitle] = useState(initialChapter.title);
-    const [sections, setSections] = useState<Section[]>(initialChapter.sections);
+                if (response.status === 200) {
+                    const fetchedChapter = response.data.data;
+                    setChapter(fetchedChapter);
 
-    const userSection = sections.find((s) => s.author === currentUser);
+                } else {
+                    toast.error("Book not found.");
+                }
+            } catch (err) {
+                if (err instanceof Error) {
+                    toast.error("Error fetching data: " + err.message);
+                } else {
+                    toast.error("An unknown error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        })();
+    },[]);
 
-    const handleAddSection = () => {
-        if (!userSection) {
-            setSections((prev) => [
-                ...prev,
-                {
-                    author: currentUser,
-                    content: "",
-                    saved: false,
-                },
-            ]);
-        }
-    };
+    if (isLoading) {
+        return <div>Loading book details...</div>;
+    }
 
-    const handleSectionChange = (text: string) => {
-        setSections((prev) =>
-            prev.map((s) =>
-                s.author === currentUser ? { ...s, content: text, saved: false } : s
-            )
-        );
-    };
+    if (!chapter || Object.keys(chapter).length === 0) {
+        return <div>No info found for book</div>;
+    }
 
-    const handleSaveMySection = () => {
-        setSections((prev) =>
-            prev.map((s) =>
-                s.author === currentUser ? { ...s, saved: true } : s
-            )
-        );
-        console.log("Section saved!");
-    };
-
-    const handleSaveAll = () => {
-        console.log("Admin saves all.", { title, sections });
-        // Salvează tot capitolul
-    };
-
-    const userCanAdd = !userSection; // nu are deloc secțiune
-
+    // @ts-ignore
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white rounded shadow mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Contribute to Chapter</h2>
+        <div className="max-w-5xl mx-auto p-6">
+            {/* Chapter Title */}
+            <h1 className="text-4xl font-bold mb-8 text-left">{chapter.title}</h1>
 
-            {/* Titlu */}
-            <div className="mb-6">
-                <label className="block text-sm font-medium mb-1">Titlu</label>
-                <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full border rounded px-4 py-2 focus:outline-none focus:ring"
-                />
+            {/* Full Chapter Content */}
+            <div className="whitespace-pre-wrap text-gray-800 leading-relaxed bg-white border border-gray-200 rounded-xl p-10 shadow-sm text-left">
+                {chapter.content}
             </div>
-
-            {/* Colaboratori */}
-            <div className="mb-6">
-                <label className="block text-sm font-medium mb-1">Colaboratori</label>
-                <ul className="list-disc list-inside text-gray-700 text-sm pl-2">
-                    {initialChapter.collaborators.map((name) => (
-                        <li key={name}>{name}</li>
-                    ))}
-                </ul>
-            </div>
-
-            {/* Secțiuni existente */}
-            <div className="space-y-6 mb-8">
-                {sections.map((section, index) => (
-                    <div key={index}>
-                        <label className="block font-medium text-sm mb-1">
-                            Section written by {section.author}
-                        </label>
-                        <textarea
-                            value={section.content}
-                            onChange={(e) =>
-                                section.author === currentUser
-                                    ? handleSectionChange(e.target.value)
-                                    : undefined
-                            }
-                            readOnly={section.author !== currentUser}
-                            className={`w-full border rounded px-4 py-2 resize-none min-h-[100px] ${
-                                section.author === currentUser
-                                    ? "bg-white focus:outline-none focus:ring"
-                                    : "bg-gray-100 text-gray-500 cursor-not-allowed"
-                            }`}
-                        />
-                        {section.author === currentUser && !section.saved && (
-                            <button
-                                onClick={handleSaveMySection}
-                                className="mt-2 px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white rounded"
-                            >
-                                Save section
-                            </button>
-                        )}
-                    </div>
-                ))}
-            </div>
-
-            {/* Buton pentru adăugare secțiune */}
-            {userCanAdd && (
-                <button
-                    onClick={handleAddSection}
-                    className="mb-8 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded"
-                >
-                    Add section
-                </button>
-            )}
-
-            {/* Admin only: salvează tot */}
-            {isAdmin && (
-                <div className="flex justify-end">
-                    <button
-                        onClick={handleSaveAll}
-                        className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white rounded"
-                    >
-                        Save all sections
-                    </button>
-                </div>
-            )}
         </div>
     );
+
 }

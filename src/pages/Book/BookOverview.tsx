@@ -6,12 +6,11 @@ import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
 
 export default function BookOverviewPage() {
-    const { id } = useParams<{ id: string }>();
-    const { token, userId } = useAuth();
+    const {id} = useParams<{ id: string }>();
+    const {token, userId} = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [book, setBook] = useState<Book | null>(null);
     const [isOwner, setIsOwner] = useState(false);
-
 
     useEffect(() => {
         if (!token || !id) return;
@@ -55,7 +54,7 @@ export default function BookOverviewPage() {
     if (!book || Object.keys(book).length === 0) {
         return <div>No info found for book</div>;
     }
-    
+
     return (
         <div className="p-6">
             <div className="bg-white p-10 relative">
@@ -73,14 +72,16 @@ export default function BookOverviewPage() {
                                     {/*{book.requestsCount} users have requested to contribute to this book*/}
                                 </p>
                                 <div className="mt-2 flex justify-center">
-                                    <button className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
+                                    <button
+                                        className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
                                         View and manage requests
                                     </button>
                                 </div>
                             </div>
                         ) : (
                             <div className="mb-6">
-                                <button className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
+                                <button
+                                    className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
                                     Request to Collaborate
                                 </button>
                             </div>
@@ -101,7 +102,7 @@ export default function BookOverviewPage() {
                 <div className="mt-6">
                     <Link
                         to={`/book/${book.id}/chapter/new`}
-                        state={{ bookTitle: book.title }}
+                        state={{bookTitle: book.title}}
                         className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
                     >
                         Add New Chapter
@@ -112,21 +113,35 @@ export default function BookOverviewPage() {
                     <h2 className="text-2xl font-semibold mb-6">Chapters</h2>
 
                     <div className="space-y-8">
-                        {book.chapters.map((chapter, index) => (
-                            <div key={index}>
-                                <h3 className="font-semibold mb-1">{chapter.title}</h3>
-                                <p className="text-gray-600 mb-2">
-                                    {
-                                        chapter.content.length > 500
-                                        ? chapter.content.slice(0, 500) + '...'
-                                        : chapter.content
-                                    }
-                                </p>
-                                <Link to={`/chapter/${chapter.id}`} className="px-4 py-2 cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 rounded-md">
-                                    See more
-                                </Link>
-                            </div>
-                        ))}
+                        {book.chapters
+                            .map((chapter, index) => {
+                                const isFinished = chapter.isFinished;
+                                return (
+                                    <div key={index}>
+                                        <h3 className="font-semibold mb-1">{chapter.title}</h3>
+                                        <p className="text-gray-600 mb-2">
+                                            {
+                                                chapter.content.length > 500
+                                                    ? chapter.content.slice(0, 500) + '...'
+                                                    : chapter.content
+                                            }
+                                        </p>
+                                        {isFinished ? (
+                                            <Link
+                                                to={`/chapter/${chapter.id}`}
+                                                className="px-4 py-2 cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 rounded-md"
+                                            >
+                                                See more
+                                            </Link>
+                                        ) : (
+                                            <Link
+                                                to={`/chapter/${chapter.id}/edit`}
+                                                className="px-4 py-2 cursor-pointer text-sm bg-green-100 hover:bg-green-200 rounded-md"
+                                            >
+                                                Contribute
+                                            </Link>)}
+                                    </div>)
+                            })}
                     </div>
                 </div>
             </div>

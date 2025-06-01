@@ -1,4 +1,5 @@
 import type {Book} from "./book.ts";
+import type {ChapterPart} from "./chapterPart.ts";
 
 export interface Chapter {
     id: string;
@@ -8,9 +9,11 @@ export interface Chapter {
     content: string;
     summary: string;
     deadline: Date;
+    isFinished: boolean;
 
     book: Book;
     contributors: string[];
+    chapterParts: ChapterPart[];
     // editRequesters User[];
     // characters     Character[]   @relation("ChapterCharacters")
     // chapterParts   ChapterPart[]
