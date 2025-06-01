@@ -13,6 +13,7 @@ interface AuthContextType {
     userId: number | null;
     username: string | null;
     email: string | null;
+    balance: number;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,6 +25,7 @@ const AuthProvider = ({ children }) => {
         username: null,
         email: null
     });
+    const [balance, setBalance] = useState(0);
 
     const setToken = (newToken: string) => {
         setToken_(newToken);
@@ -45,13 +47,22 @@ const AuthProvider = ({ children }) => {
                             "Authorization": "Bearer " + token
                         }
                     });
-                    if (response.status === 200 && response.data.success) {
+                    const balanceResponse = await api.get("/wallets", {
+                        headers: {
+                            "Authorization": "Bearer " + token
+                        }
+                    })
+                    if (response.status === 200 && response.data.success &&
+                    balanceResponse.status === 200) {
                         const { id, email, username } = response.data.data;
                         setUser({
                             userId: id,
                             email,
                             username
                         });
+                        const {amount} = balanceResponse.data;
+                        console.log(amount);
+                        setBalance(amount);
                     } else {
                         setToken_(null);
                     }
@@ -77,8 +88,8 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ token, setToken, logout, userId: user.userId, username: user.username, email: user.email }}>
-    {children}
+    <AuthContext.Provider value={{ token, setToken, logout, userId: user.userId, username: user.username, email: user.email, balance: balance }}>
+        {children}
     </AuthContext.Provider>
 )
 };
