@@ -15,7 +15,6 @@ interface TheHeaderProps {
 export default function TheHeader(props: TheHeaderProps) {
     const { toggleSidebar } = props;
     const { token, logout, username, balance } = useAuth();
-    console.log(balance)
     return(
         <header className="flex items-center h-16 px-3 sm:px-6 bg-white shadow-md border-gray-200">
             <button onClick={toggleSidebar} className="block md:hidden">

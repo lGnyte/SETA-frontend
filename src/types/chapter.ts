@@ -1,4 +1,5 @@
 import type {Book} from "./book.ts";
+import type {Tag} from "./tag.ts";
 
 export interface Chapter {
     id: string;
@@ -8,11 +9,11 @@ export interface Chapter {
     content: string;
     summary: string;
     deadline: Date;
+    finished: boolean;
 
     book: Book;
     contributors: string[];
-    // editRequesters User[];
     // characters     Character[]   @relation("ChapterCharacters")
     // chapterParts   ChapterPart[]
-    // tags           Tag[]         @relation("ChapterTags")
+    tag: Tag[];
 }

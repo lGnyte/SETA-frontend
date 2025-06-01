@@ -4,14 +4,43 @@ import {useEffect, useState} from "react";
 import type {Book} from "../../types/book.ts";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
+import ModalWrapper from "../../components/ModalWrapper.tsx";
+import {FaEye, FaReadme} from "react-icons/fa";
+import {TfiWrite} from "react-icons/tfi";
 
 export default function BookOverviewPage() {
     const { id } = useParams<{ id: string }>();
     const { token, userId } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+    const [isSent, setIsSent] = useState(false);
     const [book, setBook] = useState<Book | null>(null);
     const [isOwner, setIsOwner] = useState(false);
+    const [requestsModalOpen, setRequestsModalOpen] = useState(false);
 
+    const handleRequestToCollaborate = async (chapterId: string) => {
+        try {
+            setIsLoading(true);
+            const response = await api.post(`/chapters/${chapterId}/requestEdit`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            });
+
+            if (response.status === 204) {
+                toast.success('Edit request sent successfully!');
+                setIsSent(true);
+                return true;
+            } else {
+                toast.error('Unexpected response from server.');
+                return false;
+            }
+            
+        } catch (error) {
+            console.error('Request failed', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
         if (!token || !id) return;
@@ -76,26 +105,6 @@ export default function BookOverviewPage() {
                                 <span><strong>Created:</strong> {new Date(book.createdAt).toLocaleDateString()}</span>
                             </div>
                         </div>
-
-                        {/* Owner vs Non-owner */}
-                        {isOwner ? (
-                            <div className="bg-gray-50 p-4 rounded-md border border-gray-200 mb-6">
-                                <p className="font-semibold flex justify-center">
-                                    {/*{book.requestsCount} users have requested to contribute to this book*/}
-                                </p>
-                                <div className="mt-2 flex justify-center">
-                                    <button className="cursor-pointer px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
-                                        View and manage requests
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="mb-6">
-                                <button className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
-                                    Request to Collaborate
-                                </button>
-                            </div>
-                        )}
                     </div>
 
                     {/* Book Cover */}
@@ -108,34 +117,108 @@ export default function BookOverviewPage() {
                     </div>
                 </div>
 
-                {/* Bottom button */}
-                <div className="mt-6">
+                {isOwner &&
                     <Link
                         to={`/book/${book.id}/chapter/new`}
                         state={{ bookTitle: book.title }}
-                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                        className="px-4 inline-flex gap-2 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white rounded-md font-bold test-sm"
                     >
+                        <TfiWrite size={20} />
                         Add New Chapter
                     </Link>
+                }
                 </div>
+                <div className="mt-6">
                 {/* Chapters Section */}
                 <div className="mt-10">
-                    <h2 className="text-2xl font-semibold mb-6">Chapters</h2>
+                    <h2 className="text-2xl font-semibold mb-6">Book Chapters</h2>
 
                     <div className="space-y-8">
                         {book.chapters.map((chapter, index) => (
-                            <div key={index}>
-                                <h3 className="font-semibold mb-1">{chapter.title}</h3>
-                                <p className="text-gray-600 mb-2">
-                                    {
-                                        chapter.content.length > 500
-                                        ? chapter.content.slice(0, 500) + '...'
-                                        : chapter.content
+                            <div className="bg-white mb-5 p-6 rounded-lg shadow-sm" key={index}>
+                                <h2 className="text-2xl font-bold text-gray-900 mb-2">{chapter.title}</h2>
+
+                                <p className="text-gray-700 mb-4 whitespace-pre-wrap">{
+                                    chapter.content.length > 500
+                                    ? chapter.content.slice(0, 500) + '...'
+                                    : chapter.content
+                                }</p>
+
+                                <div className="flex justify-start gap-2">
+                                    <Link
+                                        to={`/chapter/${chapter.id}`}
+                                        className="px-4 py-1 flex gap-2 bg-teal-500 hover:bg-teal-600 text-white rounded-md text-sm font-semibold"
+                                    >
+                                        <FaReadme size={20} />
+                                        Start reading
+                                    </Link>
+
+                                    {!chapter.finished ?
+                                        (isOwner ? (
+                                            <>
+                                                <button className="cursor-pointer flex gap-2 px-4 py-1 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md"
+                                                        onClick={() => setRequestsModalOpen(!requestsModalOpen)}>
+                                                    <FaEye size={20} />
+                                                    View and manage requests
+                                                </button>
+                                                <ModalWrapper isOpen={requestsModalOpen} onClose={() => setRequestsModalOpen(false)}>
+                                                    <div className="space-y-4">
+                                                        {/* Request 1 */}
+                                                        <div className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                                                            <p className="text-sm text-gray-800 mb-1">
+                                                                <strong>@user_1</strong> requested to edit <strong>Chapter 2</strong>.
+                                                            </p>
+                                                            <p className="text-sm text-gray-600 mb-3">“I’d like to expand the dialogue in this scene and smooth out transitions.”</p>
+                                                            <div className="flex gap-2">
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-green-400 hover:bg-green-300 text-white rounded-md">Accept</button>
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-red-400 hover:bg-red-300 text-white rounded-md">Decline</button>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Request 2 */}
+                                                        <div className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                                                            <p className="text-sm text-gray-800 mb-1">
+                                                                <strong>@money</strong> requested to contribute to <strong>Chapter 2</strong>.
+                                                            </p>
+                                                            <p className="text-sm text-gray-600 mb-3">“I have an idea to enhance the ending with more suspense and foreshadowing.”</p>
+                                                            <div className="flex gap-2">
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-green-400 hover:bg-green-300 text-white rounded-md">Accept</button>
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-red-400 hover:bg-red-300 text-white rounded-md">Decline</button>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Request 3 */}
+                                                        <div className="border rounded-lg p-4 shadow-sm bg-gray-50">
+                                                            <p className="text-sm text-gray-800 mb-1">
+                                                                <strong>@sely</strong> requested to help with <strong>Chapter 2</strong>.
+                                                            </p>
+                                                            <p className="text-sm text-gray-600 mb-3">“Can I contribute some descriptive writing to strengthen the atmosphere?”</p>
+                                                            <div className="flex gap-2">
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-green-400 hover:bg-green-300 text-white rounded-md">Accept</button>
+                                                                <button className="cursor-pointer px-3 py-1 text-sm bg-red-400 hover:bg-red-300 text-white rounded-md">Decline</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </ModalWrapper>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="cursor-pointer px-4 py-1 bg-orange-300 hover:bg-orange-200 text-white font-semibold text-sm rounded-md disabled:opacity-50"
+                                                    onClick={() => handleRequestToCollaborate(chapter.id)}
+                                                    disabled={isLoading || isSent}
+                                                >
+                                                    {isSent ? 'Request Sent ✅' : isLoading ? 'Sending...' : 'Request to Collaborate'}
+                                                </button>
+                                            </>
+                                        ))
+                                        :
+                                        (
+                                            <span className="font-semibold">{chapter.finished ? 'Finished' : 'In Progress'}</span>
+                                        )
                                     }
-                                </p>
-                                <Link to={`/chapter/${chapter.id}`} className="px-4 py-2 cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 rounded-md">
-                                    See more
-                                </Link>
+                                </div>
                             </div>
                         ))}
                     </div>
