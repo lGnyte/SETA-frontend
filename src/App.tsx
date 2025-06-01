@@ -10,7 +10,8 @@ import NewBook from "./pages/Book/NewBook.tsx";
 import MyBooks from "./pages/Book/MyBooks.tsx";
 import Chapter from "./pages/Book/Chapter.tsx";
 import NewChapter from "./pages/Book/NewChapter.tsx";
-import BookChapterReaderPage from "./pages/Book/ReadChapter.tsx";                             
+import BookChapterReaderPage from "./pages/Book/ReadChapter.tsx";   
+import NewCharacter from "./pages/Book/NewCharacter.tsx";                          
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/chapter" element={<Chapter />} /> {/* schimbi tu */}
                  <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />
                 <Route path="/book/:id/chapter/:id/readChapter" element={<BookChapterReaderPage />} />
+                <Route path="/book/:bookId/character/new" element={<NewCharacter />} />
 
             </Route>
             <Route element={<CenteredLayout />}>
