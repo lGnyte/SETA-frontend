@@ -1,5 +1,11 @@
+import BookCarousel from "../components/Book/BookCarousel.tsx";
+
 function Home() {
-    return <h1 className="text-2xl font-bold">Home Page</h1>;
+    return (
+        <>
+            <BookCarousel />
+        </>
+    )
 }
 
 export default Home;
