@@ -15,6 +15,7 @@ export interface Chapter {
 
     book: Book;
     contributors: Contributor[];
+    chapterParts: ChapterPart[];
     // characters     Character[]   @relation("ChapterCharacters")
     // chapterParts   ChapterPart[]
     tag: Tag[];

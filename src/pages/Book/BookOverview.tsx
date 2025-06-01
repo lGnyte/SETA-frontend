@@ -156,6 +156,12 @@ export default function BookOverviewPage() {
                                     {!chapter.finished ?
                                         (isOwner ? (
                                             <>
+                                                <Link
+                                                    to={`/chapter/${chapter.id}/edit`}
+                                                    className="px-4 py-1 cursor-pointer text-sm bg-green-100 hover:bg-green-200 rounded-md"
+                                                >
+                                                    Contribute
+                                                </Link>
                                                 <button className="cursor-pointer flex gap-2 px-4 py-1 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md"
                                                         onClick={() => setRequestsModalOpen(!requestsModalOpen)}>
                                                     <FaEye size={20} />

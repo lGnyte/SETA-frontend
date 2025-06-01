@@ -28,7 +28,7 @@ export default function EditChapter(){
                 setChapter({
                     ...chapter,
                     content: response.data.content,
-                    isFinished: true
+                    finished: true
                 });
             } else {
                 toast.error("Failed to update chapter.");

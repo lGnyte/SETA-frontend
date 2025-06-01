@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 // book
@@ -14,21 +14,21 @@ const mockCharacters = [
     name: "Lyra",
     description: "A fearless explorer with a mysterious past.",
     traits: ["Brave", "Rebellious"],
-    imageUrl: "https://placehold.co/200x200?text=Lyra",
+    imageUrl: "https://hackathon31052025.blob.core.windows.net/storytellingblob/avatars/7eeb949e-6825-4b82-8d9e-4806568c877a.png",
   },
   {
     id: 2,
     name: "Caelum",
-    description: "The thoughtful scholar of the realm.",
+    description: "The thoughtful scholar of the realm, with a surprising hobby.",
     traits: ["Wise", "Loyal"],
-    imageUrl: "https://placehold.co/200x200?text=Caelum",
+    imageUrl: "https://hackathon31052025.blob.core.windows.net/storytellingblob/avatars/48590f7b-fd7f-48af-bca5-cf99f8ba1d92.png",
   },
   {
     id: 3,
     name: "Vex",
-    description: "A cunning rogue with shifting alliances.",
+    description: "A pure and gentle princess, daughter of the king",
     traits: ["Cunning", "Chaotic"],
-    imageUrl: "https://placehold.co/200x200?text=Vex",
+    imageUrl: "https://hackathon31052025.blob.core.windows.net/storytellingblob/avatars/1e2d1038-ae74-47cb-b836-2979dc83c982.png",
   },
 ];
 
@@ -57,7 +57,7 @@ export default function BookCharactersPage() {
           >
             <img
               src={
-                char.imageUrl || "https://placehold.co/200x200?text=Character"
+                char.imageUrl ||"https://placehold.co/200x200?text=Vex"
               }
               alt={char.name}
               className="w-40 h-40 md:w-48 md:h-48 object-cover rounded-lg border mx-auto md:mx-0"
