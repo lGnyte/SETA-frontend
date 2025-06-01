@@ -1,5 +1,3 @@
-import React from "react";
-
 const mockBook = {
   title: "The Journey of Echo",
   description:

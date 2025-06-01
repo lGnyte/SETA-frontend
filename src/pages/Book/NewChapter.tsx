@@ -1,14 +1,15 @@
-import { useState} from "react";
+import {useState} from "react";
 import {useParams} from "react-router-dom";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
+import {useAuth} from "../../lib/auth-context.tsx";
 
 export default function NewChapter() {
-   // const {token} = useAuth();
-    const { bookId } = useParams<{ bookId: string }>();
+    const { token} = useAuth();
+    const {bookId} = useParams<{ bookId: string }>();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const[order, setOrder] = useState(1);
+    const [order, setOrder] = useState(1);
     const isFormValid = title.trim() !== "";
 
     const handleSave = async () => {
@@ -30,20 +31,27 @@ export default function NewChapter() {
         }
     };
 
-    const handleEnhanceDescription = async() => {
+    const handleEnhanceDescription = async () => {
         const data = {
-            content
+            keywords:content
         }
 
         console.log(data);
-            try {
-                const response = await api.post(`/ai/plot-idea`, data);
-                console.log(response);
-                // Optionally redirect to the chapter or book overview page
-            } catch (error: any) {
-                console.error("Failed to enhance chapter:", error);
-                toast.error(error.response?.data?.message || "Failed to enhance chapter.");
-            }
+        try {
+            const response = await api.post(`/ai/plot-idea`, data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            console.log(response);
+            setContent(response.data.plotIdea)
+        } catch (error: any) {
+            console.error("Failed to enhance chapter:", error);
+            toast.error(error.response?.data?.message || "Failed to enhance chapter.");
+        }
     }
 
     const handleDiscard = () => {
@@ -111,4 +119,5 @@ export default function NewChapter() {
                 </div>
             </div>
         </div>
-    );}
+    );
+}

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
 import { useAuth } from "../../lib/auth-context.tsx";
-import { Router } from "react-router-dom"
 
 export default function CreateBookForm() {
   const { token, userId } = useAuth();
@@ -101,7 +100,6 @@ export default function CreateBookForm() {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Book created successfully!");
-        Router.push("/MyBooks"); // <--- redirect here
       } else {
         toast.error("Failed to create book.");
       }
