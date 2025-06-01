@@ -6,6 +6,7 @@ import CenteredLayout from "./components/layout/CenteredLayout.tsx";
 import Register from "./pages/User/Register.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import BookChaptersPage from "./pages/Book/BookChapters.tsx";
+import NewBook from "./pages/Book/NewBook.tsx";
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="/chapters" element={<BookChaptersPage />} />
+                <Route path="/create" element={<NewBook />} />
                 {/*<Route path="exercises/" element={<Exercises />} />*/}
             </Route>
             <Route element={<CenteredLayout />}>
