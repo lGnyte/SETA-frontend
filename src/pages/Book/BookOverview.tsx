@@ -146,7 +146,7 @@ export default function BookOverviewPage() {
 
                                 <div className="flex justify-start gap-2">
                                     <Link
-                                        to={`/chapter/${chapter.id}`}
+                                        to={`/book/${book.id}/chapter/${chapter.id}/readChapter`}
                                         className="px-4 py-1 flex gap-2 bg-teal-500 hover:bg-teal-600 text-white rounded-md text-sm font-semibold"
                                     >
                                         <FaReadme size={20} />

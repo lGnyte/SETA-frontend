@@ -26,9 +26,9 @@ function App() {
                 <Route path="/book/user/:userId" element={<MyBooks />} />
                 <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />
                 <Route path="/chapter/:chapterId" element={<Chapter />} /> {/* schimbi tu */}
-                <Route path="/chapter" element={<Chapter />} /> {/* schimbi tu */}
-                 <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />
-                <Route path="/book/:id/chapter/:id/readChapter" element={<BookChapterReaderPage />} />
+                {/*<Route path="/chapter" element={<Chapter />} /> /!* schimbi tu *!/*/}
+                {/* <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />*/}
+                <Route path="/book/:bookId/chapter/:chapterId/readChapter" element={<BookChapterReaderPage />} />
                 <Route path="/book/:bookId/character/new" element={<NewCharacter />} />
                 <Route path="/book/:bookId/characters" element={<BookCharacters />} />
 

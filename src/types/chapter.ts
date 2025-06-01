@@ -1,5 +1,6 @@
 import type {Book} from "./book.ts";
 import type {Tag} from "./tag.ts";
+import type {Contributor} from "./contributor.ts";
 
 export interface Chapter {
     id: string;
@@ -12,7 +13,7 @@ export interface Chapter {
     finished: boolean;
 
     book: Book;
-    contributors: string[];
+    contributors: Contributor[];
     // characters     Character[]   @relation("ChapterCharacters")
     // chapterParts   ChapterPart[]
     tag: Tag[];
