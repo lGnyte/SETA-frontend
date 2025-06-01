@@ -2,10 +2,10 @@ import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Layout from './components/layout/Layout'
 import Login from "./pages/User/Login.tsx";
-import CenteredLayout from "./components/layout/CenteredLayout.tsx";
+import CenteredLayout from "./components/layout/CenteredLayout";
 import Register from "./pages/User/Register.tsx";
 import NotFound from "./pages/NotFound.tsx";
-import BookChaptersPage from "./pages/Book/BookChapters.tsx";
+import BookOverview from "./pages/Book/BookOverview";
 import NewBook from "./pages/Book/NewBook.tsx";
 
 function App() {
@@ -13,9 +13,8 @@ function App() {
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
-                <Route path="/chapters" element={<BookChaptersPage />} />
-                <Route path="/create" element={<NewBook />} />
-                {/*<Route path="exercises/" element={<Exercises />} />*/}
+                <Route path="/book/:id" element={<BookOverview />} />
+                <Route path="/book/create" element={<NewBook />} />
             </Route>
             <Route element={<CenteredLayout />}>
                 <Route path="login" element={<Login />} />
