@@ -5,12 +5,14 @@ import Login from "./pages/User/Login.tsx";
 import CenteredLayout from "./components/layout/CenteredLayout.tsx";
 import Register from "./pages/User/Register.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import BookChaptersPage from "./pages/Book/BookChapters.tsx";
 
 function App() {
     return (
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
+                <Route path="/chapters" element={<BookChaptersPage />} />
                 {/*<Route path="exercises/" element={<Exercises />} />*/}
             </Route>
             <Route element={<CenteredLayout />}>
