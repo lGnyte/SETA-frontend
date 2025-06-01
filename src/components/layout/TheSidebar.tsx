@@ -8,7 +8,7 @@ import {PiHouseFill} from "react-icons/pi";
 
 export default function TheSidebar(props: { show: boolean, close: () => void}) {
     const { show, close } = props
-    const { token, logout } = useAuth()
+    const { token, logout, userId } = useAuth()
 
     document.querySelectorAll('a').forEach(a => {
         a.addEventListener('click', close)
@@ -28,7 +28,7 @@ export default function TheSidebar(props: { show: boolean, close: () => void}) {
                     <PiHouseFill size={20} />
                     Home
                 </Link>
-                <Link to={token ? "/books" : "/login"} className={!token ? "cursor-not-allowed" : ""}>
+                <Link to={token ? `/book/user/${userId}` : "/login"} className={!token ? "cursor-not-allowed" : ""}>
                     <IoBookOutline size={20} />
                     My Books
                 </Link>

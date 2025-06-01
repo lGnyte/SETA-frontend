@@ -7,6 +7,7 @@ import Register from "./pages/User/Register.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import BookOverview from "./pages/Book/BookOverview";
 import NewBook from "./pages/Book/NewBook.tsx";
+import MyBooks from "./pages/Book/MyBooks.tsx";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="/book/:id" element={<BookOverview />} />
                 <Route path="/book/create" element={<NewBook />} />
+                <Route path="/book/user/:userId" element={<MyBooks />} />
             </Route>
             <Route element={<CenteredLayout />}>
                 <Route path="login" element={<Login />} />
