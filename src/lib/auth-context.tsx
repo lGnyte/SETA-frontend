@@ -65,7 +65,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                             username
                         });
                         const {amount} = balanceResponse.data;
-                        console.log(amount);
                         setBalance(amount);
                     } else {
                         setToken_(null);

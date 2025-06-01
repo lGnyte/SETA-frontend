@@ -71,6 +71,9 @@ export default function BookCarousel() {
     }
 
     if (!books || books.length === 0) {
+        if (!token) {
+            return <h1 className={"text-3xl font-bold"}>Welcome to NARRATIVA!</h1>
+        }
         return <div>No books found.</div>;
     }
 

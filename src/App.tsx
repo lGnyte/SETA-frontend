@@ -10,9 +10,11 @@ import NewBook from "./pages/Book/NewBook.tsx";
 import MyBooks from "./pages/Book/MyBooks.tsx";
 import Chapter from "./pages/Book/Chapter.tsx";
 import NewChapter from "./pages/Book/NewChapter.tsx";
-import BookChapterReaderPage from "./pages/Book/ReadChapter.tsx";
+import BookChapterReaderPage from "./pages/Book/ReadChapter.tsx";   
+import NewCharacter from "./pages/Book/NewCharacter.tsx";    
+import BookCharacters from "./pages/Book/BookCharacters.tsx";
 import EditChapter from "./pages/Book/EditChapter.tsx";
-import NewChapterPart from "./pages/Book/CreateChapterPart.tsx";
+import NewChapterPart from "./pages/Book/CreateChapterPart.tsx";                      
 
 
 function App() {
@@ -27,11 +29,12 @@ function App() {
                 <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />
                 <Route path="/chapter/:chapterId/edit" element={<EditChapter />} />
                 <Route path="/chapter/:chapterId" element={<Chapter />} /> {/* schimbi tu */}
-                <Route path="/chapter" element={<Chapter />} /> {/* schimbi tu */}
-                 <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />
-                <Route path="/book/:id/chapter/:id/readChapter" element={<BookChapterReaderPage />} />
-                <Route path="/chapter-part/create" element={<NewChapterPart />} />
-
+                {/*<Route path="/chapter" element={<Chapter />} /> /!* schimbi tu *!/*/}
+                {/* <Route path="/book/:bookId/chapter/new" element={<NewChapter />} />*/}
+                <Route path="/book/:bookId/chapter/:chapterId/readChapter" element={<BookChapterReaderPage />} />
+                <Route path="/book/:bookId/character/new" element={<NewCharacter />} />
+                <Route path="/book/:bookId/characters" element={<BookCharacters />} />
+  				 <Route path="/chapter-part/create" element={<NewChapterPart />} />
             </Route>
             <Route element={<CenteredLayout />}>
                 <Route path="login" element={<Login />} />

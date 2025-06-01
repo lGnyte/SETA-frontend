@@ -17,7 +17,7 @@ export const getRouteConfig = (pathname: string): RouteConfig => {
     for (const [route, config] of Object.entries(routeConfig)) {
         if (matchPath(route, pathname)) return config;
     }
-    return { title: 'Exam Manager', icon: IoHomeOutline };
+    return { title: 'Narrativa', icon: IoHomeOutline };
 };
 
 const matchPath = (pattern: string, pathname: string): boolean => {

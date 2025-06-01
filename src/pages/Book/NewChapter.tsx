@@ -1,11 +1,13 @@
 import {useState} from "react";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
 import {useAuth} from "../../lib/auth-context.tsx";
 
+
 export default function NewChapter() {
     const { token} = useAuth();
+    const navigate = useNavigate();
     const {bookId} = useParams<{ bookId: string }>();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -19,12 +21,10 @@ export default function NewChapter() {
             order
         };
 
-        console.log(data);
         try {
-            const response = await api.post(`/books/${bookId}/chapters`, data);
+            await api.post(`/books/${bookId}/chapters`, data);
             toast.success("Chapter created successfully!");
-            console.log(response)
-            // Optionally redirect to the chapter or book overview page
+            navigate(`/book/${bookId}`);
         } catch (error: any) {
             console.error("Failed to create chapter:", error);
             toast.error(error.response?.data?.message || "Failed to create chapter.");
