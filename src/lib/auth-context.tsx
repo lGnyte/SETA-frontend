@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, type ReactNode, useContext, useEffect, useState} from "react";
 import api from "./axios";
 import toast from "react-hot-toast";
 import PageLoaderSpinner from "../components/layout/PageLoaderSpinner";
@@ -16,9 +16,13 @@ interface AuthContextType {
     balance: number;
 }
 
+type AuthProviderProps = {
+    children: ReactNode;
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }: AuthProviderProps) => {
     const [token, setToken_] = useState(localStorage.getItem("token"));
     const [user, setUser] = useState<UserType>({
         userId: null,
