@@ -38,7 +38,11 @@ export default function BookOverviewPage() {
                     toast.error("Book not found.");
                 }
             } catch (err) {
-                toast.error("Error fetching book: " + err.message);
+                if (err instanceof Error) {
+                    toast.error("Error fetching data: " + err.message);
+                } else {
+                    toast.error("An unknown error occurred.");
+                }
             } finally {
                 setIsLoading(false);
             }

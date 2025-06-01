@@ -1,17 +1,20 @@
-import { useState } from "react";
-
-const genresList = ["Fantasy", "Mystery", "Sci-Fi", "Romance", "Non-fiction"];
-const tagsList = ["Adventure", "Magic", "Horror", "Friendship", "Betrayal"];
+import {useEffect, useState} from "react";
+import api from "../../lib/axios.ts";
+import toast from "react-hot-toast";
+import {useAuth} from "../../lib/auth-context.tsx";
 
 export default function CreateBookForm() {
+    const {token} = useAuth();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [finished, setFinished] = useState("false");
     const [aiEnabled, setAiEnabled] = useState("false");
     const [genres, setGenres] = useState<string[]>([]);
     const [tags, setTags] = useState<string[]>([]);
-    const [coverImage, setCoverImage] = useState<File | null>(null);
+    const [coverUrl, setCoverImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [fetchedTags, setFetchedTags] = useState<string[]>([]);
+    const [fetchedGenres, setFetchedGenres] = useState<string[]>([]);
 
     const isFormValid = title.trim() !== "" && description.trim() !== "";
 
@@ -38,20 +41,20 @@ export default function CreateBookForm() {
         const data = {
             title,
             description,
-            finished,
             aiEnabled,
             genres,
             tags,
-            coverImage,
+            coverUrl,
         };
-        console.log("Book data:", data);
+        
+        console.log(data);
+        
         // You can send `data` to your API here
     };
 
     const handleDiscard = () => {
         setTitle("");
         setDescription("");
-        setFinished("false");
         setAiEnabled("false");
         setGenres([]);
         setTags([]);
@@ -59,8 +62,44 @@ export default function CreateBookForm() {
         setImagePreview(null);
     };
 
+    useEffect(() => {
+        if (!token) return;
+
+        (async () => {
+            setIsLoading(true);
+            setFetchedTags([]);
+
+            try {
+                let response = await api.get('/tags');
+                if (response.status === 200) {
+                    if (response.data.data && response.data.data.length > 0) {
+                        setFetchedTags(response.data.data);
+                    }
+                }
+                response = await api.get('/genres');
+                if (response.status === 200) {
+                    if (response.data.data && response.data.data.length > 0) {
+                        setFetchedGenres(response.data.data);
+                    }
+                }
+            } catch (err) {
+                if (err instanceof Error) {
+                    toast.error("Error fetching data: " + err.message);
+                } else {
+                    toast.error("An unknown error occurred.");
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        })();
+    }, [token]);
+    
+    if (isLoading || !fetchedGenres || !fetchedTags) {
+        return <div>Please wait...</div>
+    }
+
     return (
-        <div className="max-w-lg mx-auto p-6 bg-white rounded shadow">
+        <div className="max-w-xl">
             <h2 className="text-2xl font-semibold mb-6">Create a New Book</h2>
 
             <div className="space-y-4">
@@ -86,19 +125,6 @@ export default function CreateBookForm() {
                     />
                 </div>
 
-                {/* Finished */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">Finished</label>
-                    <select
-                        value={finished}
-                        onChange={(e) => setFinished(e.target.value)}
-                        className="w-full border rounded px-4 py-2"
-                    >
-                        <option value="false">No</option>
-                        <option value="true">Yes</option>
-                    </select>
-                </div>
-
                 {/* AI Enabled */}
                 <div>
                     <label className="block text-sm font-medium mb-1">AI Enabled</label>
@@ -116,7 +142,7 @@ export default function CreateBookForm() {
                 <div>
                     <label className="block text-sm font-medium mb-1">Genres</label>
                     <div className="flex flex-wrap gap-2 border rounded px-4 py-2">
-                        {genresList.map((genre) => (
+                        {fetchedGenres.map((genre) => (
                             <button
                                 key={genre}
                                 type="button"
@@ -137,7 +163,7 @@ export default function CreateBookForm() {
                 <div>
                     <label className="block text-sm font-medium mb-1">Tags</label>
                     <div className="flex flex-wrap gap-2 border rounded px-4 py-2">
-                        {tagsList.map((tag) => (
+                        {fetchedTags.map((tag) => (
                             <button
                                 key={tag}
                                 type="button"

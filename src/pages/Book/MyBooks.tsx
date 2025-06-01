@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {useAuth} from "../../lib/auth-context.tsx";
 import toast from "react-hot-toast";
 import BookCard from "../../components/Book/BookCard.tsx";
+import {Link} from "react-router-dom";
 
 export default function MyBooks() {
     const { token } = useAuth();
@@ -27,7 +28,11 @@ export default function MyBooks() {
                     setBooks(response.data.data);
                 }
             } catch (err) {
-                toast.error("Error fetching data." + err.message);
+                if (err instanceof Error) {
+                    toast.error("Error fetching data: " + err.message);
+                } else {
+                    toast.error("An unknown error occurred.");
+                }
             } finally {
                 setIsLoading(false);
             }
@@ -38,15 +43,13 @@ export default function MyBooks() {
         return <div>Loading books...</div>;
     }
 
-    if (!books || books.length === 0) {
-        return <div>No books found.</div>;
-    }
-
     return (
         <>
             <section className="p-4">
                 <h2 className="text-xl font-semibold mb-2">My Books</h2>
-                {books.length > 0 ? (
+                {!books.length && <p className="text-gray-500 italic mb-6">No books found.</p>}
+                <Link to={'/book/create'} className={"px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md"}>Create a Book</Link>
+                {books.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {books.map((book) => (
                             <div key={book.id}>
@@ -54,8 +57,6 @@ export default function MyBooks() {
                             </div>
                         ))}
                     </div>
-                ) : (
-                    <p className="text-gray-500 italic">No finished books found.</p>
                 )}
             </section>
         </>

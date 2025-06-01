@@ -23,7 +23,11 @@ export default function BookCarousel() {
                     setBooks(response.data.data);
                 }
             } catch (err) {
-                toast.error("Error fetching data." + err.message);
+                if (err instanceof Error) {
+                    toast.error("Error fetching data: " + err.message);
+                } else {
+                    toast.error("An unknown error occurred.");
+                }
             } finally {
                 setIsLoading(false);
             }

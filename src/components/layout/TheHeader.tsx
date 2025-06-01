@@ -35,7 +35,7 @@ export default function TheHeader(props: TheHeaderProps) {
                     </span>
                 </div>
                 {token ?
-                    <div onClick={logout} title="Logout" className="flex items-center w-8 gap-2 overflow-hidden duration-200 cursor-pointer hover:bg-gray-100 hover:px-2 hover:py-1 rounded-md [&>span]:w-0 hover:[&>span]:w-auto hover:w-28 text-sm">
+                    <div onClick={logout} title="Logout" className="flex items-center w-8 gap-2 overflow-hidden duration-200 cursor-pointer hover:bg-gray-100 hover:px-2 hover:py-1 rounded-md [&>span]:w-0 hover:[&>span]:w-auto hover:w-28 text-md">
                         <IoMdLogOut size={24} />
                         <span>Logout</span>
                     </div>
