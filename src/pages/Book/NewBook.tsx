@@ -1,32 +1,52 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
-import {useAuth} from "../../lib/auth-context.tsx";
+import { useAuth } from "../../lib/auth-context.tsx";
 
 export default function CreateBookForm() {
-    const {token} = useAuth();
+    const { token,userId } = useAuth();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [aiEnabled, setAiEnabled] = useState("false");
-    const [genres, setGenres] = useState<string[]>([]);
-    const [tags, setTags] = useState<string[]>([]);
+    // const [tags, setTags] = useState<string[]>([]);
     const [coverUrl, setCoverImage] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [fetchedTags, setFetchedTags] = useState<string[]>([]);
-    const [fetchedGenres, setFetchedGenres] = useState<string[]>([]);
-
+    const [fetchedGenres, setFetchedGenres] = useState<{ id: number; name: string }[]>([]);
+    const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
     const isFormValid = title.trim() !== "" && description.trim() !== "";
+    const [newTagName, setNewTagName] = useState("");
+    const [isCreatingTag, setIsCreatingTag] = useState(false);
+    const [fetchedTags, setFetchedTags] = useState<string[]>([]);
+    const createTag = async () => {
+        if (!newTagName.trim()) {
+            toast.error("Please enter a tag name.");
+            return;
+        }
 
-    const handleMultiSelect = (
-        selected: string,
-        setFunc: React.Dispatch<React.SetStateAction<string[]>>
-    ) => {
-        setFunc((prev) =>
-            prev.includes(selected)
-                ? prev.filter((item) => item !== selected)
-                : [...prev, selected]
-        );
+        setIsCreatingTag(true);
+        try {
+            const response = await api.post('/tags', { name: newTagName.trim() });
+            if (response.status === 201 || response.status === 200) {
+                // Assuming response.data contains the created tag (string or object)
+                const createdTag = response.data.name || response.data;
+
+                // Add to fetchedTags list
+                setFetchedTags(prev => [...prev, createdTag]);
+
+                // Optionally auto-select the new tag
+                // setTags(prev => [...prev, createdTag]);
+
+                toast.success("Tag created successfully!");
+                setNewTagName(""); // Clear input
+            } else {
+                toast.error("Failed to create tag.");
+            }
+        } catch (error) {
+            toast.error("Error creating tag." + error);
+        } finally {
+            setIsCreatingTag(false);
+        }
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,27 +57,63 @@ export default function CreateBookForm() {
         }
     };
 
-    const handleSave = () => {
-        const data = {
+const handleSave = async () => {
+    if (!token) {
+        toast.error("You must be logged in");
+        return;
+    }
+    if (!userId) {
+        toast.error("User info missing");
+        return;
+    }
+
+    try {
+        let uploadedCoverUrl = null;
+        if (coverUrl) {
+            // Upload file logic here (e.g., to S3 or your server)
+            // For now, assume placeholder URL
+            uploadedCoverUrl = "https://example.com/your-uploaded-image.jpg";
+        }
+
+
+        const payload = {
             title,
             description,
-            aiEnabled,
-            genres,
-            tags,
-            coverUrl,
+            ownerId: userId,  
+            aiEnabled: aiEnabled === "true",
+            genres: selectedGenre ? 
+                {
+                    connect: [{id: selectedGenre}]
+                }
+                : 
+                [],
+            // tags,
+            coverUrl: uploadedCoverUrl,
         };
-        
-        console.log(data);
-        
-        // You can send `data` to your API here
-    };
 
+        const response = await api.post("/books", payload, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (response.status === 201 || response.status === 200) {
+            toast.success("Book created successfully!");
+            // router.push("/MyBooks"); // <--- redirect here
+        } else {
+            toast.error("Failed to create book.");
+        }
+    } catch (error) {
+        toast.error("Error: " + (error instanceof Error ? error.message : "Unknown error"));
+    }
+};
     const handleDiscard = () => {
         setTitle("");
         setDescription("");
         setAiEnabled("false");
-        setGenres([]);
-        setTags([]);
+        setSelectedGenre(null);
+        // setTags([]);
         setCoverImage(null);
         setImagePreview(null);
     };
@@ -78,7 +134,10 @@ export default function CreateBookForm() {
                 }
                 response = await api.get('/genres');
                 if (response.status === 200) {
-                    if (response.data.data && response.data.data.length > 0) {
+                    console.log("Genres response data:", response.data);
+                    if (Array.isArray(response.data) && response.data.length > 0) {
+                        setFetchedGenres(response.data);
+                    } else if (response.data.data && Array.isArray(response.data.data)) {
                         setFetchedGenres(response.data.data);
                     }
                 }
@@ -93,7 +152,7 @@ export default function CreateBookForm() {
             }
         })();
     }, [token]);
-    
+
     if (isLoading || !fetchedGenres || !fetchedTags) {
         return <div>Please wait...</div>
     }
@@ -140,45 +199,58 @@ export default function CreateBookForm() {
 
                 {/* Genres Multi-select */}
                 <div>
-                    <label className="block text-sm font-medium mb-1">Genres</label>
-                    <div className="flex flex-wrap gap-2 border rounded px-4 py-2">
+                    <label className="block text-sm font-medium mb-1">Genre</label>
+                    <select
+                        value={selectedGenre || ""}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            setSelectedGenre(value ? Number(value) : null);
+                        }}
+                        className="w-full border rounded px-4 py-2"
+                    >
+                        <option value="">Select a genre</option>
                         {fetchedGenres.map((genre) => (
-                            <button
-                                key={genre}
-                                type="button"
-                                onClick={() => handleMultiSelect(genre, setGenres)}
-                                className={`px-2 py-1 rounded text-sm transition ${
-                                    genres.includes(genre)
-                                        ? "bg-blue-600 text-white"
-                                        : "bg-gray-100 hover:bg-gray-200"
-                                }`}
-                            >
-                                {genre}
-                            </button>
+                            <option key={genre.id} value={genre.id}>
+                                {genre.name}
+                            </option>
                         ))}
+                    </select>
+
+                </div>
+                <div>
+                    <label className="block text-sm font-medium mb-1">Add New Tag</label>
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={newTagName}
+                            onChange={(e) => setNewTagName(e.target.value)}
+                            className="flex-grow border rounded px-4 py-2 focus:outline-none focus:ring"
+                            placeholder="Enter new tag name"
+                            disabled={isCreatingTag}
+                        />
+                        <button
+                            type="button"
+                            onClick={createTag}
+                            disabled={isCreatingTag || !newTagName.trim()}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50"
+                        >
+                            {isCreatingTag ? "Adding..." : "Add"}
+                        </button>
                     </div>
+                </div>
+                <div className="mt-4">
+                    <label className="block text-sm font-medium mb-1">Created Tags:</label>
+                    {fetchedTags.length === 0 ? (
+                        <p className="text-gray-500">No tags created yet.</p>
+                    ) : (
+                        <ul className="list-disc list-inside">
+                            {fetchedTags.map((tag) => (
+                                <li key={tag}>{tag}</li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
 
-                {/* Tags Multi-select */}
-                <div>
-                    <label className="block text-sm font-medium mb-1">Tags</label>
-                    <div className="flex flex-wrap gap-2 border rounded px-4 py-2">
-                        {fetchedTags.map((tag) => (
-                            <button
-                                key={tag}
-                                type="button"
-                                onClick={() => handleMultiSelect(tag, setTags)}
-                                className={`px-2 py-1 rounded text-sm transition ${
-                                    tags.includes(tag)
-                                        ? "bg-green-600 text-white"
-                                        : "bg-gray-100 hover:bg-gray-200"
-                                }`}
-                            >
-                                {tag}
-                            </button>
-                        ))}
-                    </div>
-                </div>
 
                 {/* Cover Image Upload */}
                 <div>
@@ -211,11 +283,10 @@ export default function CreateBookForm() {
                     <button
                         onClick={handleSave}
                         disabled={!isFormValid}
-                        className={`px-4 py-2 rounded text-white transition duration-200 ${
-                            isFormValid
-                                ? "bg-[#90D1CA] hover:bg-[#5fb6a4]"
-                                : "bg-gray-300 cursor-not-allowed"
-                        }`}
+                        className={`px-4 py-2 rounded text-white transition duration-200 ${isFormValid
+                            ? "bg-[#90D1CA] hover:bg-[#5fb6a4]"
+                            : "bg-gray-300 cursor-not-allowed"
+                            }`}
                     >
                         Save
                     </button>
