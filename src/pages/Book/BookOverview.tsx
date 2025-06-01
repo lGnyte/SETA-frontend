@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 
 export default function BookOverviewPage() {
     const { id } = useParams<{ id: string }>();
-
     const { token, userId } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [book, setBook] = useState<Book | null>(null);
@@ -98,6 +97,16 @@ export default function BookOverviewPage() {
                     </div>
                 </div>
 
+                {/* Bottom button */}
+                <div className="mt-6">
+                    <Link
+                        to={`/book/${book.id}/chapter/new`}
+                        state={{ bookTitle: book.title }}
+                        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
+                    >
+                        Add New Chapter
+                    </Link>
+                </div>
                 {/* Chapters Section */}
                 <div className="mt-10">
                     <h2 className="text-2xl font-semibold mb-6">Chapters</h2>
@@ -113,7 +122,7 @@ export default function BookOverviewPage() {
                                         : chapter.content
                                     }
                                 </p>
-                                <Link to={`/book/${book.id}/chapter/${chapter.id}`} className="px-4 py-2 cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 rounded-md">
+                                <Link to={`/chapter/${chapter.id}`} className="px-4 py-2 cursor-pointer text-sm bg-gray-100 hover:bg-gray-200 rounded-md">
                                     See more
                                 </Link>
                             </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const currentUser = "Olivia";
-const isAdmin = false;
+const isAdmin = true;
 
 interface Section {
     author: string;
