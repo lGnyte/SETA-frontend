@@ -3,7 +3,7 @@ import { IoMdClose } from "react-icons/io"
 import {Link} from "react-router-dom";
 import {IoBookOutline} from "react-icons/io5";
 import {MdLogin, MdLogout} from "react-icons/md";
-import {LuUserPlus} from "react-icons/lu";
+import {LuBookPlus, LuUserPlus} from "react-icons/lu";
 import {PiHouseFill} from "react-icons/pi";
 
 export default function TheSidebar(props: { show: boolean, close: () => void}) {
@@ -32,10 +32,10 @@ export default function TheSidebar(props: { show: boolean, close: () => void}) {
                     <IoBookOutline size={20} />
                     My Books
                 </Link>
-                {/*<Link to={token ? "/exercises/new" : "/login"} className={!token ? "cursor-not-allowed" : ""}>*/}
-                {/*    <MdCreateNewFolder  size={20} />*/}
-                {/*    New Exercise*/}
-                {/*</Link>*/}
+                <Link to={token ? `/book/create` : "/login"} className={!token ? "cursor-not-allowed" : ""}>
+                    <LuBookPlus size={20} />
+                    Create a book
+                </Link>
                 {/*<Link to={token ? "/exercises/categories" : "/login"} className={!token ? "cursor-not-allowed" : ""}>*/}
                 {/*    <TbCategoryFilled  size={20} />*/}
                 {/*    Categories*/}

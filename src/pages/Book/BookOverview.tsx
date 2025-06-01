@@ -62,9 +62,20 @@ export default function BookOverviewPage() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between gap-10">
                     <div className="flex-1">
-                        <h1 className="text-3xl font-bold mb-2">{book.title}</h1>
-                        <p className="text-[#5fb6a4] mb-4">By {book.owner.username}</p>
-                        <p className="text-gray-700 mb-6">{book.description}</p>
+                        <div className="bg-white mb-5 p-6 rounded-lg shadow-sm">
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">{book.title}</h1>
+                            <p className="text-teal-600 font-medium mb-2">By @{book.owner.username}</p>
+                            <p className="text-gray-700 mb-4">{book.description || 'No description provided.'}</p>
+
+                            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+                                <span><strong>Status:</strong> {book.finished ? 'Finished' : 'In Progress'}</span>
+                                <span><strong>AI Enabled:</strong> {book.aiEnabled ? 'Yes' : 'No'}</span>
+                                <span><strong>Genres:</strong> {book.genres?.map(g => g.name).join(', ') || 'N/A'}</span>
+                                <span><strong>Chapters:</strong> {book.chapters?.length || 0}</span>
+                                <span><strong>Characters:</strong> {book.characters?.length || 0}</span>
+                                <span><strong>Created:</strong> {new Date(book.createdAt).toLocaleDateString()}</span>
+                            </div>
+                        </div>
 
                         {/* Owner vs Non-owner */}
                         {isOwner ? (
@@ -73,7 +84,7 @@ export default function BookOverviewPage() {
                                     {/*{book.requestsCount} users have requested to contribute to this book*/}
                                 </p>
                                 <div className="mt-2 flex justify-center">
-                                    <button className="px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
+                                    <button className="cursor-pointer px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md">
                                         View and manage requests
                                     </button>
                                 </div>

@@ -113,7 +113,7 @@ export default function Login() {
           <div className="flex w-full items-center justify-center gap-3">
             <button
               type="submit"
-              className="w-full h-12 py-2 rounded-md bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold mt-2"
+              className="cursor-pointer w-full h-12 py-2 rounded-md bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold mt-2"
             >
               Login
             </button>

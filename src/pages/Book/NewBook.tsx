@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import api from "../../lib/axios.ts";
 import toast from "react-hot-toast";
 import { useAuth } from "../../lib/auth-context.tsx";
+import { useNavigate } from 'react-router-dom';
+
 
 export default function CreateBookForm() {
   const { token, userId } = useAuth();
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [aiEnabled, setAiEnabled] = useState("false");
@@ -100,6 +103,7 @@ export default function CreateBookForm() {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Book created successfully!");
+        navigate(`/book/user/${userId}`);
       } else {
         toast.error("Failed to create book.");
       }
@@ -135,7 +139,6 @@ export default function CreateBookForm() {
         }
         response = await api.get("/genres");
         if (response.status === 200) {
-          console.log("Genres response data:", response.data);
           if (Array.isArray(response.data) && response.data.length > 0) {
             setFetchedGenres(response.data);
           } else if (response.data.data && Array.isArray(response.data.data)) {
@@ -232,7 +235,7 @@ export default function CreateBookForm() {
               type="button"
               onClick={createTag}
               disabled={isCreatingTag || !newTagName.trim()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50"
+              className="px-4 cursor-pointer py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition disabled:opacity-50"
             >
               {isCreatingTag ? "Adding..." : "Add"}
             </button>
@@ -277,7 +280,7 @@ export default function CreateBookForm() {
         <div className="flex justify-end gap-4 pt-4">
           <button
             onClick={handleDiscard}
-            className="px-4 py-2 bg-[#E8AD91] hover:bg-[#d1917a] text-white rounded transition duration-200"
+            className="px-4 py-2 cursor-pointer bg-[#E8AD91] hover:bg-[#d1917a] text-white rounded transition duration-200"
           >
             Discard
           </button>
@@ -286,7 +289,7 @@ export default function CreateBookForm() {
             disabled={!isFormValid}
             className={`px-4 py-2 rounded text-white transition duration-200 ${
               isFormValid
-                ? "bg-[#90D1CA] hover:bg-[#5fb6a4]"
+                ? "bg-[#90D1CA] cursor-pointer hover:bg-[#5fb6a4]"
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >

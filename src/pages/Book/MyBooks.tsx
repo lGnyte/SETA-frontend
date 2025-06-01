@@ -50,7 +50,7 @@ export default function MyBooks() {
                 {!books.length && <p className="text-gray-500 italic mb-6">No books found.</p>}
                 <Link to={'/book/create'} className={"px-4 py-2 bg-[#90D1CA] hover:bg-[#5fb6a4] text-white font-semibold text-sm rounded-md"}>Create a Book</Link>
                 {books.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div className="grid mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         {books.map((book) => (
                             <div key={book.id}>
                                 <BookCard book={book} />

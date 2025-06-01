@@ -21,7 +21,7 @@ export default function TheHeader(props: TheHeaderProps) {
             <button onClick={toggleSidebar} className="block md:hidden">
                 <TbMenu2 size={36} className="mr-5" />
             </button>
-            <nav className="text-lg font-semibold ml-auto flex items-center gap-2 [&>a]:px-4 [&>a]:py-1 [&>a:hover]:bg-gray-100 [&>a:hover]:text-white [&>a]:rounded-md [&>a]:duration-200 ">
+            <nav className="text-lg font-semibold ml-auto flex items-center gap-2 [&>a]:px-4 [&>a]:py-1 [&>a:hover]:bg-gray-100  [&>a]:rounded-md [&>a]:duration-200 ">
                 <div className="sm:flex hidden items-center gap-2 px-2 py-1 duration-200 rounded-md select-none">
                     {username &&
                         <div className="flex items-center gap-2 mr-5 text-yellow-500">
