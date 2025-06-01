@@ -8,6 +8,7 @@ import NotFound from "./pages/NotFound.tsx";
 import BookOverview from "./pages/Book/BookOverview";
 import NewBook from "./pages/Book/NewBook.tsx";
 import MyBooks from "./pages/Book/MyBooks.tsx";
+import Chapter from "./pages/Book/Chapter.tsx";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 <Route path="/book/:id" element={<BookOverview />} />
                 <Route path="/book/create" element={<NewBook />} />
                 <Route path="/book/user/:userId" element={<MyBooks />} />
+                <Route path="/chapter" element={<Chapter />} /> {/* schimbi tu */}
             </Route>
             <Route element={<CenteredLayout />}>
                 <Route path="login" element={<Login />} />
